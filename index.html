@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NIDAAN – AI Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #1f3b4d;
+      color: white;
+      padding: 16px;
+      text-align: center;
+      font-size: 22px;
+    }
+    .chat-box {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+    }
+    input {
+      width: 70%;
+    }
+    button {
+      width: 25%;
+      background: #1f3b4d;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  NIDAAN – AI Assistant
+</header>
+
+<div class="chat-box">
+  <input id="chatInput" placeholder="Type your question..." />
+  <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+async function sendToN8N(message) {
+  fetch("https://n8n-oazxlbnc.us-west-1.clawcloudrun.com/webhook/dcf55298-595e-4fe9-9669-176f0ef157dd/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-nidaan-key": "NIDAAN_2025"
+    },
+    body: JSON.stringify({
+      message: message,
+      page: window.location.href,
+      userAgent: navigator.userAgent,
+      time: new Date().toISOString()
+    })
+  });
+}
+
+function sendMessage() {
+  const msg = document.getElementById("chatInput").value;
+  if (msg.trim() !== "") {
+    sendToN8N(msg);
+    document.getElementById("chatInput").value = "";
+  }
+}
+
+window.addEventListener("load", function () {
+  sendToN8N("PAGE_OPENED");
+});
+</script>
+
+</body>
+</html>
