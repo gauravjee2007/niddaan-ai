@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NIDAAN Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+
+<div class="login-box">
+  <h2>NIDAAN AI Login</h2>
+  <input id="user" placeholder="Username">
+  <input id="pass" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <p id="err"></p>
+</div>
+
+<script>
+function login() {
+  if (user.value === "admin" && pass.value === "password") {
+    localStorage.setItem("nidaan_auth", "yes");
+    location.href = "/chat.html";
+  } else {
+    err.innerText = "Invalid credentials";
+  }
+}
+</script>
+
+</body>
+</html>
