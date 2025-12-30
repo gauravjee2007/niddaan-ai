@@ -2,82 +2,130 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>NIDAAN – AI Assistant</title>
+  <title>NIDAAN Secure Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
       margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f2efe9;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    header {
-      background: #1f3b4d;
-      color: white;
-      padding: 16px;
+
+    .card {
+      background: #fff;
+      padding: 30px;
+      width: 360px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       text-align: center;
-      font-size: 22px;
     }
-    .chat-box {
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
+
+    h2 {
+      margin-bottom: 20px;
+      color: #2c5f5d;
     }
-    input, button {
-      padding: 10px;
-      font-size: 16px;
-    }
+
     input {
-      width: 70%;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
     }
+
     button {
-      width: 25%;
-      background: #1f3b4d;
-      color: white;
+      width: 100%;
+      padding: 10px;
+      background: #6ccf70;
       border: none;
+      color: #fff;
+      font-size: 16px;
+      border-radius: 5px;
       cursor: pointer;
+    }
+
+    button:hover {
+      background: #5cbf60;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
     }
   </style>
 </head>
 <body>
 
-<header>
-  NIDAAN – AI Assistant
-</header>
-
-<div class="chat-box">
-  <input id="chatInput" placeholder="Type your question..." />
-  <button onclick="sendMessage()">Send</button>
+<div id="loginBox" class="card">
+  <h2>NIDAAN Login</h2>
+  <input type="text" id="username" placeholder="Username" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
+  <div id="error" class="error"></div>
 </div>
 
 <script>
-async function sendToN8N(message) {
-  fetch("https://n8n-oazxlbnc.us-west-1.clawcloudrun.com/webhook/dcf55298-595e-4fe9-9669-176f0ef157dd/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-nidaan-key": "NIDAAN_2025"
-    },
-    body: JSON.stringify({
-      message: message,
-      page: window.location.href,
-      userAgent: navigator.userAgent,
-      time: new Date().toISOString()
-    })
-  });
-}
+  const CHAT_URL = "https://n8n-oazxlbnc.us-west-1.clawcloudrun.com/webhook/dcf55298-595e-4fe9-9669-176f0ef157dd/chat";
 
-function sendMessage() {
-  const msg = document.getElementById("chatInput").value;
-  if (msg.trim() !== "") {
-    sendToN8N(msg);
-    document.getElementById("chatInput").value = "";
+  function login() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+
+    if (user === "admin" && pass === "password") {
+      trackUser(user, "LOGIN_SUCCESS");
+
+      // Remove login UI
+      document.body.innerHTML = "";
+
+      // Load chat
+      const iframe = document.createElement("iframe");
+      iframe.src = CHAT_URL;
+
+      iframe.onload = () => {
+        trackUser(user, "CHAT_LOADED");
+      };
+
+      document.body.appendChild(iframe);
+    } else {
+      document.getElementById("error").innerText =
+        "Invalid credentials";
+      trackUser(user || "unknown", "LOGIN_FAILED");
+    }
   }
-}
 
-window.addEventListener("load", function () {
-  sendToN8N("PAGE_OPENED");
-});
+  function trackUser(user, action) {
+    const log = {
+      user: user,
+      action: action,
+      time: new Date().toISOString(),
+      page: window.location.href
+    };
+
+    console.log("NIDAAN TRACK:", log);
+
+    let history = JSON.parse(localStorage.getItem("nidaan_logs")) || [];
+    history.push(log);
+    localStorage.setItem("nidaan_logs", JSON.stringify(history));
+
+    // 🔁 Future: webhook tracking
+    // fetch("YOUR_WEBHOOK_URL", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify(log)
+    // });
+  }
 </script>
 
 </body>
