@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NIDAAN Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2efe9;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: #fff;
+      padding: 30px;
+      width: 360px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #2f5f57;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #74d17c;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #5ec16a;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>NIDAAN Login</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <div class="error" id="error">Invalid credentials</div>
+</div>
+
+<script>
+  const N8N_CHAT_URL = "https://n8n-oazxlbnc.us-west-1.clawcloudrun.com/webhook/dcf55298-595e-4fe9-9669-176f0ef157dd/chat";
+  const N8N_TRACK_URL = "https://n8n-oazxlbnc.us-west-1.clawcloudrun.com/webhook/dcf55298-595e-4fe9-9669-176f0ef157dd";
+
+  function login() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+
+    if (user === "admin" && pass === "password") {
+      trackLogin(user);
+      window.location.href = N8N_CHAT_URL;
+    } else {
+      document.getElementById("error").style.display = "block";
+    }
+  }
+
+  function trackLogin(user) {
+    fetch(N8N_TRACK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        event: "login",
+        user: user,
+        time: new Date().toISOString(),
+        userAgent: navigator.userAgent
+      })
+    }).catch(() => {});
+  }
+</script>
+
+</body>
+</html>
