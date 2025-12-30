@@ -1,0 +1,57 @@
+body { margin:0; font-family:Arial; background:#f5f7fa; }
+
+.login-body {
+  background:#020617;
+  display:flex;
+  height:100vh;
+  justify-content:center;
+  align-items:center;
+}
+
+.login-box {
+  background:white;
+  padding:30px;
+  width:300px;
+  border-radius:8px;
+  text-align:center;
+}
+
+.topbar {
+  background:linear-gradient(90deg,#0f172a,#1e293b);
+  color:white;
+  padding:15px;
+  display:flex;
+  align-items:center;
+}
+
+.logo { height:40px; margin-right:10px; }
+
+.chat-box {
+  height:70vh;
+  padding:20px;
+  overflow-y:auto;
+}
+
+.user { text-align:right; margin:10px; }
+.bot { text-align:left; margin:10px; }
+
+.input-bar {
+  position:fixed;
+  bottom:0;
+  width:100%;
+  display:flex;
+  background:white;
+}
+
+.input-bar input {
+  flex:1;
+  padding:15px;
+  border:none;
+}
+
+.input-bar button {
+  padding:15px;
+  background:#2563eb;
+  color:white;
+  border:none;
+}
